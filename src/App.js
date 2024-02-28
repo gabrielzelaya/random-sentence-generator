@@ -1,25 +1,56 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [quote, setQuote] = useState('');
+  const [author, setAuthor] = useState('');
+
+  useEffect(() => {
+    getQuote();
+  }, []);
+
+  const getQuote = async () => {
+    try {
+      const response = await fetch('https://api.quotable.io/random');
+      const data = await response.json();
+      setQuote(data.content);
+      setAuthor(data.author);
+    } catch (error) {
+      console.error('Error fetching quote:', error);
+    }
+  };
+
+  const handleClick = () => {
+    getQuote();
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
+    <div id="quote-box" className="container">
+      <div id="text" className="quote">
+        <p>"{quote}"</p>
+      </div>
+      <div id="author" className="author">
+        <p>- {author}</p>
+      </div>
+      <div className="buttons">
+        <button id="new-quote" className="btn" onClick={handleClick}>
+          New Quote
+        </button>
         <a
-          className="App-link"
-          href="https://reactjs.org"
+          id="tweet-quote"
+          className="btn"
+          href={`https://twitter.com/intent/tweet?text="${quote}" - ${author}`}
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Tweet Quote
         </a>
-      </header>
+      </div>
     </div>
   );
-}
+};
 
 export default App;
+
+
+//code by gabriel zelaya 
